@@ -1,5 +1,5 @@
 const {articleData, commentData, topicData, userData} = require('../be-nc-news/db/data/test-data')
-const { getTopics, getAllEndpoints, getArticleById } = require('./controllers/controller.js');
+const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('./controllers/controller.js');
 const express = require("express")
 const app = express();
 
@@ -9,6 +9,8 @@ app.get('/api/topics', getTopics)
 app.get('/api', getAllEndpoints)
 
 app.get('/api/articles/:article_id', getArticleById)
+
+app.get('/api/articles', getAllArticles)
 
 
 
