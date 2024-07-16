@@ -1,9 +1,23 @@
 const {articleData, commentData, topicData, userData} = require('../be-nc-news/db/data/test-data')
-const { getTopics } = require('./controllers/controller.js');
+const { getTopics, getAllEndpoints } = require('./controllers/controller.js');
 const express = require("express")
 const app = express();
 
 app.get('/api/topics', getTopics)
+
+
+app.get('/api', getAllEndpoints)
+
+
+
+
+
+
+
+
+
+
+//ERROR HANDLERS
 
 app.use((err, request, response, next) => {
     if(err.code === '22P02'){
