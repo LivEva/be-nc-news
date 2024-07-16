@@ -1,5 +1,5 @@
 const {articleData, commentData, topicData, userData} = require('../be-nc-news/db/data/test-data')
-const { getTopics, getAllEndpoints } = require('./controllers/controller.js');
+const { getTopics, getAllEndpoints, getArticleById } = require('./controllers/controller.js');
 const express = require("express")
 const app = express();
 
@@ -7,6 +7,8 @@ app.get('/api/topics', getTopics)
 
 
 app.get('/api', getAllEndpoints)
+
+app.get('/api/articles/:article_id', getArticleById)
 
 
 
@@ -21,7 +23,15 @@ app.get('/api', getAllEndpoints)
 
 app.use((err, request, response, next) => {
     if(err.code === '22P02'){
-        response.status(400).send({ msg: "400 - Bad request" })
+        response.status(400).send({ msg: "Bad Request" })
+    }else{
+        next(err);
+    }
+});
+
+app.use((err, request, response, next) => {
+    if(err.status && err.msg){
+        response.status(err.status).send({ msg: err.msg })
     }else{
         next(err);
     }
