@@ -3,16 +3,17 @@ const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('
 const express = require("express")
 const app = express();
 
-app.get('/api/topics', getTopics)
 
+
+
+
+app.get('/api/topics', getTopics)
 
 app.get('/api', getAllEndpoints)
 
 app.get('/api/articles/:article_id', getArticleById)
 
 app.get('/api/articles', getAllArticles)
-
-
 
 
 
