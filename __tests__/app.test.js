@@ -109,7 +109,7 @@ describe("ARTICLES", () => {
     .get('/api/articles/20')
     .expect(404)
     .then(({ body }) => {
-      expect(body.msg).toBe("No Article Found under article_id 20")
+      expect(body.msg).toBe("No article found under article_id 20")
     })
   });
 
