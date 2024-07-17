@@ -58,10 +58,11 @@ describe("TOPICS", () => {
       .expect(200)
       .then(({body}) => {
       expect(body.endpoints).toEqual(endpoints)
-  
       })
     })
-  })
+  });
+
+
 });
 
 //ARTICLES////////////////////
@@ -183,8 +184,94 @@ describe("ARTICLES", () => {
     })
   });
 
-
- 
-
-
 })
+
+
+
+//COMMENTS ///////////////////
+
+
+describe("COMMENTS FROM ARTICLES", () => {
+
+
+  test("Returns 200 status code and all the comments with the expected keys and value data types belonging to the article_id that is given.", () => {
+    return request(app)
+    .get('/api/articles/1/comments')
+    .expect(200)
+    .then((response) => {
+
+      const comments = response.body.comments
+
+      expect(comments.length).toBe(11)
+
+      comments.forEach((comment) => {
+
+        expect(typeof comment.comment_id).toBe('number')
+        expect(typeof comment.body).toBe('string')
+        expect(typeof comment.article_id).toBe('number')
+        expect(typeof comment.author).toBe('string')
+        expect(typeof comment.votes).toBe('number')
+        expect(typeof comment.created_at).toBe('string')
+      })
+    })
+  });
+
+
+  test("Returns 200 status code and every array object that belongs to that article_id request", () => {
+    return request(app)
+    .get('/api/articles/3/comments')
+    .expect(200)
+    .then((response) => {
+
+      const comments = response.body.comments
+
+      expect(comments.length).toBe(2)
+
+      expect(comments).toMatchObject(   [
+        {
+          comment_id: 10,
+          body: 'git push origin master',
+          article_id: 3,
+          author: 'icellusedkars',
+          votes: 0,
+          created_at: '2020-06-20T07:24:00.000Z'
+        },
+        {
+          comment_id: 11,
+          body: 'Ambidextrous marsupial',
+          article_id: 3,
+          author: 'icellusedkars',
+          votes: 0,
+          created_at: '2020-09-19T23:10:00.000Z'
+        }
+      ])
+    })
+  });
+
+
+
+
+  test("Returns a 400 status code when given an invalid article_id request", () => {
+
+    return request(app)
+    .get('/api/articles/number-one/comments')
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe('Bad Request')
+    })
+  });
+
+
+
+  test("Returns a 404 status code when given a valid article_id but it does not exist.", () => {
+    return request(app)
+    .get('/api/articles/40/comments')
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe('No Article Found under article_id 40')
+    })
+  });
+
+
+
+} )

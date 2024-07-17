@@ -39,9 +39,8 @@ response.status(200).send({ article })
 
     next(err);
 
-}) 
-}
-
+  });
+}; 
 
 
 
@@ -56,9 +55,11 @@ function getAllArticles(request, response, next) {
 
     next(err);
 
-  })
+  });
+};
 
-}
+
+
 
 
 
