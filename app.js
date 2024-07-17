@@ -1,16 +1,32 @@
 const {articleData, commentData, topicData, userData} = require('../be-nc-news/db/data/test-data')
+
 const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('./controllers/controller.js');
+
+const getCommentsById = require('../be-nc-news/controllers/getComments.controller.js')
+
 const express = require("express")
+
 const app = express();
 
-app.get('/api/topics', getTopics)
 
+
+
+
+app.get('/api/topics', getTopics)
 
 app.get('/api', getAllEndpoints)
 
 app.get('/api/articles/:article_id', getArticleById)
 
 app.get('/api/articles', getAllArticles)
+
+app.get('/api/articles/:article_id/comments', getCommentsById)
+
+
+
+app.all("*",(request, response, next) => {
+    response.status(404).send({ msg: "404 - request not found" })
+ });
 
 
 
@@ -41,12 +57,10 @@ app.use((err, request, response, next) => {
 
 
 //this is for all undeclared enpoints. 
-app.all("*",(request, response, next) => {
-   response.status(404).send({ msg: "404 - request not found" })
-});
+
 
 app.use((err, request, response, next) => {
-    console.log("HELLO FROM CODE 500!")
+    console.log(err)
     response.status(500).send({message: "Internal Server Error"})
 });
 
