@@ -1,3 +1,5 @@
+
+
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
   return { created_at: new Date(created_at), ...otherProperties };
@@ -28,3 +30,29 @@ exports.checkArticleIdExists = (article_id) => {
     }
   })
 }
+
+exports.checkUsernameIsValid = (usernamesObj, username) => {
+
+    for (let i = 0; i < usernamesObj.length; i++) {
+   
+        if (usernamesObj[i].hasOwnProperty('username') && usernamesObj[i].username === username) {
+            return true;
+        }
+    }
+
+    return false;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

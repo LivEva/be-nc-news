@@ -1,4 +1,8 @@
 const { fetchCommentsById, addCommentToArticle } = require('../models/getComments.model')
+const { checkUsernameIsValid } = require('../db/seeds/utils')
+const usernames = require('../db/data/test-data/users')
+
+
 
 
 function getCommentsById(request, response, next) {
@@ -24,8 +28,11 @@ function addCommentOnArticle(request, response, next){
     const { article_id } = request.params;
 
     const { username, body } = request.body;
+
+  
   
         addCommentToArticle(article_id, username, body).then((comment) => {
+
 
             response.status(201).send({comment})
 
