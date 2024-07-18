@@ -2,13 +2,13 @@ const {articleData, commentData, topicData, userData} = require('../be-nc-news/d
 
 const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('./controllers/controller.js');
 
-const getCommentsById = require('../be-nc-news/controllers/getComments.controller.js')
+const { getCommentsById, addCommentOnArticle } = require('../be-nc-news/controllers/getComments.controller.js')
 
 const express = require("express")
 
 const app = express();
 
-
+app.use(express.json());
 
 
 
@@ -21,6 +21,8 @@ app.get('/api/articles/:article_id', getArticleById)
 app.get('/api/articles', getAllArticles)
 
 app.get('/api/articles/:article_id/comments', getCommentsById)
+
+app.post('/api/articles/:article_id/comments', addCommentOnArticle)
 
 
 
@@ -46,6 +48,7 @@ app.use((err, request, response, next) => {
         next(err);
     }
 });
+
 
 app.use((err, request, response, next) => {
     if(err.status && err.msg){
