@@ -3,7 +3,8 @@ const db = require('../db/connection');
 const app = require('../app');
 const seed = require('../db/seeds/seed');
 const {articleData, commentData, topicData, userData} = require('../db/data/test-data/index');
-const endpoints = require('../endpoints.json')
+const endpoints = require('../endpoints.json');
+const comments = require('../db/data/test-data/comments');
 
 
 beforeEach(() => {
@@ -110,7 +111,7 @@ describe("ARTICLES", () => {
     .get('/api/articles/20')
     .expect(404)
     .then(({ body }) => {
-      expect(body.msg).toBe("No Article Found under article_id 20")
+      expect(body.msg).toBe("No article found under article_id 20")
     })
   });
 
@@ -191,10 +192,10 @@ describe("ARTICLES", () => {
 //COMMENTS ///////////////////
 
 
-describe("COMMENTS FROM ARTICLES", () => {
+describe("/api/articles/:article_id/comments'", () => {
 
 
-  test("Returns 200 status code and all the comments with the expected keys and value data types belonging to the article_id that is given.", () => {
+  test("GET: Returns 200 status code and all the comments with the expected keys and value data types belonging to the article_id that is given.", () => {
     return request(app)
     .get('/api/articles/1/comments')
     .expect(200)
@@ -217,7 +218,9 @@ describe("COMMENTS FROM ARTICLES", () => {
   });
 
 
-  test("Returns 200 status code and every array object that belongs to that article_id request", () => {
+
+
+  test("GET: Returns 200 status code and every array object that belongs to that article_id request", () => {
     return request(app)
     .get('/api/articles/3/comments')
     .expect(200)
@@ -251,7 +254,7 @@ describe("COMMENTS FROM ARTICLES", () => {
 
 
 
-  test("Returns a 400 status code when given an invalid article_id request", () => {
+  test("GET: Returns a 400 status code when given an invalid article_id request", () => {
 
     return request(app)
     .get('/api/articles/number-one/comments')
@@ -263,15 +266,130 @@ describe("COMMENTS FROM ARTICLES", () => {
 
 
 
-  test("Returns a 404 status code when given a valid article_id but it does not exist.", () => {
+
+  test("GET: Returns a 404 status code when given a valid article_id but it does not exist.", () => {
     return request(app)
     .get('/api/articles/40/comments')
     .expect(404)
     .then(({ body }) => {
-      expect(body.msg).toBe('No Article Found under article_id 40')
+      expect(body.msg).toBe('No article found under article_id 40')
+    })
+  });
+});
+
+
+
+
+describe("POST", () => {
+
+
+
+  
+  test("POST: Returns 201 status code and sends back a new comment to the given article_id", () => {
+
+    const newComment = { 
+      username: 'butter_bridge', 
+      body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!" }
+
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(201)
+    .then((response) => {
+
+      const comment = response.body.comment;
+
+      expect(comment).toEqual({
+
+          article_id: 4,
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          comment_id: 19,
+          created_at: expect.any(String),
+          author: 'butter_bridge',
+          votes: expect.any(Number),
+       
+      })
     })
   });
 
 
 
-} )
+
+  test("POST: Returns a 400 status code when the username or body does not have an input", () => {
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send({
+      body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+    })
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("username and body need an input")
+    })
+  });
+
+
+
+
+  test("POST: Returns 400 status code when the article_id provided is not valid", () => {
+
+    return request(app)
+    .post('/api/articles/number-four/comments')
+    .send({
+      username: 'butter_bridge', 
+      body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!" 
+    })
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe('Bad Request')
+    })
+  });
+
+
+
+
+  test("POST: Returns 404 message when the article_id provided is valid but does not exist", () => {
+
+    return request(app)
+    .post('/api/articles/200/comments')
+    .send({
+      username: 'butter_bridge', 
+      body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!" 
+    })
+    .expect(404)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe('No article found under article_id 200')
+    })
+  });
+
+
+
+
+  test("POST: Returns a 400 status code when a body input is not provided", () => {
+
+    return request(app)
+    .post('/api/articles/200/comments')
+    .send({
+      username: 'butter_bridge'
+    })
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe('username and body need an input')
+    })
+  });
+
+
+
+
+
+})
+
+
+
+//write a test for a 404 error when given an invalid username in in the post request.
+
+//write a test for an invalid post request.
+
