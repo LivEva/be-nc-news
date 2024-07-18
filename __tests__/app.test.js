@@ -5,6 +5,7 @@ const seed = require('../db/seeds/seed');
 const {articleData, commentData, topicData, userData} = require('../db/data/test-data/index');
 const endpoints = require('../endpoints.json');
 const comments = require('../db/data/test-data/comments');
+const articles = require('../db/data/test-data/articles');
 
 
 beforeEach(() => {
@@ -111,7 +112,7 @@ describe("ARTICLES", () => {
     .get('/api/articles/20')
     .expect(404)
     .then(({ body }) => {
-      expect(body.msg).toBe("No article found under article_id 20")
+      expect(body.msg).toBe("Article_id not found")
     })
   });
 
@@ -272,7 +273,7 @@ describe("/api/articles/:article_id/comments'", () => {
     .get('/api/articles/40/comments')
     .expect(404)
     .then(({ body }) => {
-      expect(body.msg).toBe('No article found under article_id 40')
+      expect(body.msg).toBe('Article_id not found')
     })
   });
 });
@@ -360,7 +361,7 @@ describe("POST", () => {
     .expect(404)
     .then(({ body }) => {
 
-      expect(body.msg).toBe('No article found under article_id 200')
+      expect(body.msg).toBe('Article_id not found')
     })
   });
 
@@ -412,13 +413,164 @@ describe("POST", () => {
   });
 
 
+});
+
+
+
+
+describe("PATCH", () => {
+
+
+
+
+  describe("/api/articles/:article_id", () => {
+
+
+
+
+    test("PATCH: 200 status code when given a +1 increment vote. ", () => {
+
+      return request(app)
+      .patch('/api/articles/6')
+      .send({
+        inc_votes: 1
+      })
+      .expect(200)
+      .then((response) => {
+
+        const article = response.body.article;
+
+        console.log(article)
+
+        expect(article).toEqual(  {
+          article_id: 6,
+          title: 'A',
+          topic: 'mitch',
+          author: 'icellusedkars',
+          body: 'Delicious tin of cat food',
+          created_at: expect.any(String),
+          votes: 1,
+          article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+        })
+      })
+    })
+  });
+
+
+
+
+  test("PATCH: Returns 200 status code when given a -1 decrement vote ", () => {
+
+    return request(app)
+    .patch('/api/articles/5')
+    .send({
+      inc_votes: -1
+    })
+    .expect(200)
+    .then((response) => {
+
+      const article = response.body.article;
+
+      expect(article).toEqual({
+        article_id: 5,
+        title: 'UNCOVERED: catspiracy to bring down democracy',
+        topic: 'cats',
+        author: 'rogersop',
+        body: 'Bastet walks amongst us, and the cats are taking arms!',
+        created_at: expect.any(String),
+        votes: -1,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+      })
+    })
+  });
+
+
+
+
+  test("PATCH: return 400 when given an inc_votes that is not a number", () => {
+
+    return request(app)
+    .patch('/api/articles/5')
+    .send({
+      inc_votes: "not a number"
+    })
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("Bad Request")
+
+    })
+  });
+
+
+
+  
+  test("PATCH: Returns 400 status code for invalid article_id", () => {
+
+    return request(app)
+    .patch('/api/articles/not-a-number')
+    .send({
+      inc_votes: 1
+    })
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe('Bad Request')
+
+    })
+  });
+
+
+
+  
+  test("PATCH: 404 for valid article_id but does not exist ", () => {
+
+    return request(app)
+    .patch('/api/articles/1000')
+    .send({
+      inc_votes: 1
+    })
+    .expect(404)
+    .then(({body}) => {
+
+      expect(body.msg).toBe("Article_id not found")
+
+    })
+   
+  });
+
 
 })
 
-//create a test to check that the username is a string data type
+//QUESTION 10
+//get users is one test 
+//that we recieve the users back thats all.
+//the normal way you do that in the model
 
-//the user should be able to update the votes
-//passing 
+
+
+//3 tests
+//deleting by id - 
+
+//successful delete 204 
+//fetch back all of the comments in the normal way to check that the deleted one is not there.
+//400 invalid id
+//404 valid not does not exist.
+
+//response.status(204).send({ invoked with nothing is fine }) ?? not sure what that means??
+
+//check the rows is empty and create a 404 on an empty array being recieved in the delete. 
+
+
+
+
+
+
+//for question 9 - fetch the thing again to check that it is not there.
+//fetch all comments and check that the comment is no longer there. THIS IS EXTRA WORK THOUGH
+//
+
+
 
 
 
