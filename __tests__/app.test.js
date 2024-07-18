@@ -324,7 +324,7 @@ describe("POST", () => {
     .expect(400)
     .then(({ body }) => {
 
-      expect(body.msg).toBe("username and body need an input")
+      expect(body.msg).toBe("Bad Request")
     })
   });
 
@@ -367,29 +367,59 @@ describe("POST", () => {
 
 
 
-  test("POST: Returns a 400 status code when a body input is not provided", () => {
+
+  test("POST: Ignores any additional properties that are not required.", () => {
 
     return request(app)
-    .post('/api/articles/200/comments')
+    .post('/api/articles/4/comments')
     .send({
-      username: 'butter_bridge'
+      username: 'butter_bridge',
+      body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      nickname: "Mr Butter"
     })
-    .expect(400)
+    .expect(201)
+    .then((response) => {
+
+      const comment = response.body.comment;
+
+      expect(comment).toEqual({
+
+        article_id: 4,
+        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        comment_id: 19,
+        created_at: expect.any(String),
+        author: 'butter_bridge',
+        votes: expect.any(Number),
+     
+      })
+    })
+  });
+
+
+  test("Returns a 404 status message when passed a username that is not valid", () => {
+
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send({
+      username: 'luna_lovegood',
+      body: "I hope the Nargles don't steal my shoes",
+    })
+    .expect(404)
     .then(({ body }) => {
 
-      expect(body.msg).toBe('username and body need an input')
+      expect(body.msg).toBe('username does not exist')
     })
   });
 
 
 
-
-
 })
 
+//create a test to check that the username is a string data type
+
+//the user should be able to update the votes
+//passing 
 
 
-//write a test for a 404 error when given an invalid username in in the post request.
 
-//write a test for an invalid post request.
 
