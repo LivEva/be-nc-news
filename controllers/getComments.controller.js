@@ -1,4 +1,4 @@
-const { fetchCommentsById, addCommentToArticle, updateAnArticle, deleteAComment } = require('../models/getComments.model')
+const { fetchCommentsById, addCommentToArticle, updateAnArticle, deleteAComment, fetchUsers } = require('../models/getComments.model')
 const { checkUsernameIsValid } = require('../db/seeds/utils')
 const usernames = require('../db/data/test-data/users')
 
@@ -82,12 +82,27 @@ function deleteComment(request, response, next){
 
 
 
+function getUsers(request, response, next){
+
+    fetchUsers().then((users) => {
+
+        response.status(200).send({users})
+
+    }).catch((err) => {
+
+        next(err);
+
+    })
+}
 
 
 
 
 
-module.exports = { getCommentsById, addCommentOnArticle, updateArticle, deleteComment }
+
+
+
+module.exports = { getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers }
 
 
 

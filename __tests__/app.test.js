@@ -578,6 +578,51 @@ describe("DELETE", () => {
 
 
 
+describe("GET", () => {
+
+  describe("/api/users", () => {
+
+    test("GET: Returns a 200 status code and an array of all the users back to the client", () => {
+
+      return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+
+        const users = response.body.users.rows;
+
+        expect(users.length).toBe(4)
+
+        users.forEach((user) => {
+
+          expect(typeof user.username).toBe('string')
+          expect(typeof user.name).toBe('string')
+          expect(typeof user.avatar_url).toBe('string')
+
+        })
+
+      })
+
+
+    })
+
+    test("GET: Returns a 404 status code if the endpoint is valid but non-existent", () => {
+
+      return request(app)
+      .get("/api/not-an-endpoint")
+      .expect(404)
+      .then(({ body }) => {
+
+        expect(body.msg).toBe('404 - request not found')
+
+        
+      })
+    })
+  })
+})
+
+
+
 
 
  
