@@ -86,10 +86,14 @@ function addCommentToArticle(article_id, username, body){
                 if(rows.length === 0){
                     return Promise.reject({status: 404, msg: "Not Found"})
                 }
-
-           
-
             })
+         }
+
+
+
+         function fetchUsers(){
+
+            return db.query(`SELECT * FROM users;`)
 
 
          }
@@ -103,4 +107,4 @@ function addCommentToArticle(article_id, username, body){
 
 
 
-module.exports = { fetchCommentsById, addCommentToArticle, updateAnArticle, deleteAComment }
+module.exports = { fetchCommentsById, addCommentToArticle, updateAnArticle, deleteAComment, fetchUsers }
