@@ -1,4 +1,4 @@
-const { fetchCommentsById, addCommentToArticle, updateAnArticle } = require('../models/getComments.model')
+const { fetchCommentsById, addCommentToArticle, updateAnArticle, deleteAComment } = require('../models/getComments.model')
 const { checkUsernameIsValid } = require('../db/seeds/utils')
 const usernames = require('../db/data/test-data/users')
 
@@ -64,8 +64,30 @@ function updateArticle(request, response, next){
 
 
 
+function deleteComment(request, response, next){
 
-module.exports = { getCommentsById, addCommentOnArticle, updateArticle }
+    const { comment_id } = request.params;
+
+
+    deleteAComment(comment_id).then(() => {
+
+        response.status(204).send();
+
+    }).catch((err) => {
+
+        next(err)
+
+    })
+};
+
+
+
+
+
+
+
+
+module.exports = { getCommentsById, addCommentOnArticle, updateArticle, deleteComment }
 
 
 

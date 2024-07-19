@@ -2,7 +2,7 @@ const {articleData, commentData, topicData, userData} = require('../be-nc-news/d
 
 const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('./controllers/controller.js');
 
-const { getCommentsById, addCommentOnArticle, updateArticle } = require('../be-nc-news/controllers/getComments.controller.js')
+const { getCommentsById, addCommentOnArticle, updateArticle, deleteComment } = require('../be-nc-news/controllers/getComments.controller.js')
 
 const express = require("express")
 
@@ -25,6 +25,8 @@ app.get('/api/articles/:article_id/comments', getCommentsById)
 app.post('/api/articles/:article_id/comments', addCommentOnArticle)
 
 app.patch('/api/articles/:article_id', updateArticle)
+
+app.delete('/api/comments/:comment_id', deleteComment)
 
 
 
