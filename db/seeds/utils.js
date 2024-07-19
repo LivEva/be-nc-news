@@ -1,3 +1,4 @@
+const { topicData } = require("../data/test-data");
 
 
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
@@ -44,6 +45,19 @@ exports.checkUsernameIsValid = (usernamesObj, username) => {
 
 }
 
+exports.checkTopicIsValid = (topicData, topic) => {
+
+  for (let i = 0; i < topicData.length; i++) {
+ 
+      if (topicData[i].hasOwnProperty('topic') && topicData[i].topic === topic) {
+        
+          return true;
+      }
+  }
+
+  return false;
+
+}
 
 
 
