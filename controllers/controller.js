@@ -45,13 +45,18 @@ response.status(200).send({ article })
 
 
 
+
+
+
+
+
+
 function getAllArticles(request, response, next) {
 
-  const { sort_by, order } = request.query;
+  const { sort_by, order, topic } = request.query;
 
 
-
-  fetchAllArticles(sort_by, order).then((articles) => {
+  fetchAllArticles(sort_by, order, topic).then((articles) => {
 
     response.status(200).send({ articles })
 

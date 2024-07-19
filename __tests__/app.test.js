@@ -68,11 +68,23 @@ describe("TOPICS", () => {
 
 });
 
+
+
+
+
 //ARTICLES////////////////////
 
 describe("ARTICLES", () => {
 
+
+
+
+
   describe("/api/articles/:article_id", () => {
+
+
+
+
 
 
     test("Returns 200 status code and the correct article when given valid article ID", () => {
@@ -198,6 +210,8 @@ describe("QUERY", () => {
 
 
 
+
+
   //This needs sorting.
   test("GET: Returns 200 status code and an array sorted by the created_at (date) by default. ", () => {
 
@@ -306,7 +320,7 @@ describe("QUERY", () => {
 
       const articles = response.body.articles;
 
-      expect(articles).toBeSortedBy('votes', { ascending: true })
+      expect(articles).toBeSortedBy('votes', { descending: false })
     })
   });
 
@@ -375,8 +389,115 @@ describe("QUERY", () => {
   });
 
 
+  test("GET: Returns a 400 status code when the query is an invalid column name.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=created_at&order=not-correct')
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("Invalid order input")
+
+    })
+  });
+
+
+
+
+//TOPICS BY QUERY
+
+
+describe("GET TOPICS BY QUERY", () => {
+
+
+  test("GET: Returns 200 status code and the article that belongs to topic query request", () => {
+
+    return request(app)
+    .get('/api/articles?topic=cats')
+    .expect(200)
+    .then((response) => {
+
+      const article = response.body.articles;
+
+      expect(article.length).toBe(1)
+
+      expect(article[0]).toMatchObject( {
+        author: 'rogersop',
+        title: 'UNCOVERED: catspiracy to bring down democracy',
+        article_id: 5,
+        topic: 'cats',
+        created_at: expect.any(String),
+        votes: 0,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+        comment_count: '2'
+      } )
+    })
+  });
+
+
+
+
+
+  test("GET: Returns 200 status code and the article that belongs to topic query request", () => {
+
+    return request(app)
+    .get('/api/articles?topic=mitch')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles.length).toBe(12)
+
+      articles.forEach((article) => {
+
+        expect(article.topic).toBe('mitch')
+      })
+    })
+  });
+
+
+
+
+
+  test("GET: Returns 404 status code when given a topic name that does not exist.", () => {
+
+    return request(app)
+    .get('/api/articles?topic=dogs')
+    .expect(404)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe('Not Found')
+    })
+  });
+
+
+
+
+
+  test("GET: Returns a 404 status code when given a topic that exists in the database but there are no articles that belong to it. ", () => {
+
+    return request(app)
+    .get('/api/articles?topic=paper')
+    .expect(404)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe('Not Found')
+    })
+  });
+
+
+
+})
+  
+
+
 
 //COMMENTS ///////////////////
+
+
+
+
 
 
 describe("/api/articles/:article_id/comments'", () => {
