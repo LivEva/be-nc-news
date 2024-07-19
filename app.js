@@ -30,6 +30,8 @@ app.delete('/api/comments/:comment_id', deleteComment)
 
 app.get('/api/users', getUsers)
 
+app.get('/api/article/?sort-by=title')
+
 
 
 app.all("*",(request, response, next) => {
@@ -68,7 +70,6 @@ app.use((err, request, response, next) => {
         next(err);
     }
 });
-
 
 //this is for all undeclared enpoints. 
 
