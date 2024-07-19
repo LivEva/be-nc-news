@@ -440,8 +440,6 @@ describe("PATCH", () => {
 
         const article = response.body.article;
 
-        console.log(article)
-
         expect(article).toEqual(  {
           article_id: 6,
           title: 'A',
@@ -539,39 +537,50 @@ describe("PATCH", () => {
    
   });
 
-
 })
 
-//QUESTION 10
-//get users is one test 
-//that we recieve the users back thats all.
-//the normal way you do that in the model
+
+
+describe("DELETE", () => {
+
+  describe("/api/comments/:comment_id", () => {
+
+    test("DELETE: Returns a 204 status code that deletes the comment belonging to the provided comment_id", () => {
+
+      return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+    })
+  })
+
+  test('DELETE: Returns a 404 status message when given a valid comment_id but does not exist', () => {
+
+    return request(app)
+    .delete("/api/comments/100")
+    .expect(404)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("Not Found")
+    })
+  })
+
+  test("DELETE: Returns a 400 status message when given an invalid comment_id", () => {
+
+    return request(app)
+    .delete("/api/comments/not-a-number")
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("Bad Request")
+    })
+  });
+})
 
 
 
-//3 tests
-//deleting by id - 
-
-//successful delete 204 
-//fetch back all of the comments in the normal way to check that the deleted one is not there.
-//400 invalid id
-//404 valid not does not exist.
-
-//response.status(204).send({ invoked with nothing is fine }) ?? not sure what that means??
-
-//check the rows is empty and create a 404 on an empty array being recieved in the delete. 
 
 
-
-
-
-
-//for question 9 - fetch the thing again to check that it is not there.
-//fetch all comments and check that the comment is no longer there. THIS IS EXTRA WORK THOUGH
-//
-
-
-
+ 
 
 
 
