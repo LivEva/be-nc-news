@@ -6,6 +6,7 @@ const {articleData, commentData, topicData, userData} = require('../db/data/test
 const endpoints = require('../endpoints.json');
 const comments = require('../db/data/test-data/comments');
 const articles = require('../db/data/test-data/articles');
+const sorted = require("jest-sorted")
 
 
 beforeEach(() => {
@@ -96,27 +97,6 @@ describe("ARTICLES", () => {
     });
 
 
-    test("Returns the 400 status code when given an invalid article ID", () => {
-      return request(app)
-      .get('/api/articles/number-one')
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe('Bad Request')
-      })
-    })
-  });
-
-
-  test("Returns a 404 status code when given an valid article ID but does not exist ", () => {
-    return request(app)
-    .get('/api/articles/20')
-    .expect(404)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Article_id not found")
-    })
-  });
-
-
   test('Returns articles object with expected properties with correct datatypes', () => {
     return request(app)
     .get('/api/articles')
@@ -176,6 +156,18 @@ describe("ARTICLES", () => {
   });
 
 
+
+
+  test("Returns a 404 status code when given an valid article ID but does not exist ", () => {
+    return request(app)
+    .get('/api/articles/20')
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Article_id not found")
+    })
+  });
+
+
   test("Returns 404 status message when passed a valid but non existent request name", () => {
      
     return request(app)
@@ -186,7 +178,201 @@ describe("ARTICLES", () => {
     })
   });
 
+     test("Returns the 400 status code when given an invalid article ID", () => {
+      return request(app)
+      .get('/api/articles/number-one')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Bad Request')
+      })
+    })
+  });
+
 })
+
+
+
+
+describe("QUERY", () => {
+
+
+
+
+  //This needs sorting.
+  test("GET: Returns 200 status code and an array sorted by the created_at (date) by default. ", () => {
+
+    return request(app)
+    .get('/api/articles')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('created_at', { descending: true });
+
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and an array sorted by 'author' if this is the given query.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=author&order=asc')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('author', { descending: false })
+
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and an array sorted by 'title' if this is the given query.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=title&order=asc')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('title', { descending: false })
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and an array sorted by 'article_id' if this is the given query.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=article_id&order=asc')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('article_id', { descending: false })
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and an array sorted by 'topic' if this is the given query.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=topic&order=asc')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('topic', { descending: false })
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and an array sorted by 'created_at' if this is the given query.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=created_at&order=asc')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('created_at', { descending: false })
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and an array sorted by 'votes' if this is the given query.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=votes&order=asc')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('votes', { ascending: true })
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and an array sorted by 'article_img_url' if this is the given query.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=article_img_url&order=asc')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy('article_img_url', { descending: false })
+
+    })
+  });
+
+  });
+
+
+
+
+  test("GET: Returns a 400 status code when the query is a column name that doesnt exist in the array of valid sort_by columns.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=body')
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("Invalid sort_by input")
+
+    })
+  });
+
+
+
+
+  test("GET: Returns a 400 status code when the query is an invalid column name.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=not-a-valid-name')
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("Invalid sort_by input")
+
+    })
+  });
+
+
+
+
+  test("GET: Returns a 400 status code when the query is an invalid column name.", () => {
+
+    return request(app)
+    .get('/api/articles?sort_by=created_at&order=not-correct')
+    .expect(400)
+    .then(({ body }) => {
+
+      expect(body.msg).toBe("Invalid order input")
+
+    })
+  });
 
 
 
@@ -551,7 +737,10 @@ describe("DELETE", () => {
       .delete("/api/comments/1")
       .expect(204)
     })
-  })
+  });
+
+
+
 
   test('DELETE: Returns a 404 status message when given a valid comment_id but does not exist', () => {
 
@@ -562,7 +751,10 @@ describe("DELETE", () => {
 
       expect(body.msg).toBe("Not Found")
     })
-  })
+  });
+
+
+
 
   test("DELETE: Returns a 400 status message when given an invalid comment_id", () => {
 
@@ -574,13 +766,22 @@ describe("DELETE", () => {
       expect(body.msg).toBe("Bad Request")
     })
   });
-})
+
+});
+
 
 
 
 describe("GET", () => {
 
+
+
+
+
   describe("/api/users", () => {
+
+
+
 
     test("GET: Returns a 200 status code and an array of all the users back to the client", () => {
 
@@ -614,12 +815,11 @@ describe("GET", () => {
       .then(({ body }) => {
 
         expect(body.msg).toBe('404 - request not found')
-
-        
       })
     })
-  })
-})
+  });
+
+});
 
 
 
