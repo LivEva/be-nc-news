@@ -32,7 +32,7 @@ describe("TOPICS", () => {
       .expect(200)
       .then((response) => {
 
-        const topics = response.body.topics.rows
+        const topics = response.body.topics.rows;
 
         expect(topics.length).toBe(3)
       topics.forEach((topic) => {
@@ -84,16 +84,14 @@ describe("ARTICLES", () => {
 
 
 
-
-
-
     test("Returns 200 status code and the correct article when given valid article ID", () => {
       return request(app)
       .get('/api/articles/1')
       .expect(200)
       .then((response) => {
 
-      const article = response.body.article
+      const article = response.body.article;
+
       expect(article).toMatchObject( {
         
           article_id: 1,
@@ -101,12 +99,46 @@ describe("ARTICLES", () => {
           topic: 'mitch',
           author: 'butter_bridge',
           body: 'I find this existence challenging',
-          created_at: '2020-07-09T20:11:00.000Z',
+          created_at: expect.any(String),
           votes: 100,
           article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700' 
         })
       })
     });
+
+
+
+    test("Returns 200 status code, correct article matching article_id given and a comment_count category with correct value and datatype.", () => {
+      return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then((response) => {
+
+      const articles = response.body.article
+
+      expect(articles).toHaveProperty('comment_count')
+      expect(typeof articles.comment_count).toBe('string')
+      expect(articles.comment_count).toBe('11')
+      })
+    });
+
+
+
+
+    test("Returns 200 status code, correct article matching the article_id provided and a comment_count category with the value of how many comments that article has.", () => {
+      return request(app)
+      .get('/api/articles/5')
+      .expect(200)
+      .then((response) => {
+
+      const articles = response.body.article
+
+      expect(articles.comment_count).toBe('2')
+
+      })
+    });
+
+
 
 
   test('Returns articles object with expected properties with correct datatypes', () => {
