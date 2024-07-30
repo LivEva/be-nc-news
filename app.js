@@ -2,7 +2,7 @@
 
 const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('./controllers/controller.js');
 
-const { getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers } = require('../be-nc-news/controllers/getComments.controller.js')
+const { getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers } = require('./controllers/getComments.controller.js')
 
 const express = require("express")
 
