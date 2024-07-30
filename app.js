@@ -1,4 +1,4 @@
-const {articleData, commentData, topicData, userData} = require('../be-nc-news/db/data/test-data')
+// const {articleData, commentData, topicData, userData} = require('../be-nc-news/db/data/test-data')
 
 const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('./controllers/controller.js');
 
