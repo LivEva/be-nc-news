@@ -945,6 +945,8 @@ describe("GET", () => {
 
         const users = response.body.users.rows;
 
+        console.log(users)
+
         expect(users.length).toBe(4)
 
         users.forEach((user) => {
