@@ -1,6 +1,6 @@
 const request = require('supertest');
 const db = require('../db/connection');
-const app = require('../app');
+const app = require('../endpoints/app');
 const seed = require('../db/seeds/seed');
 const {articleData, commentData, topicData, userData} = require('../db/data/test-data/index');
 const endpoints = require('../endpoints.json');
@@ -71,16 +71,13 @@ describe("TOPICS", () => {
 
 
 
-
-//ARTICLES////////////////////
-
 describe("ARTICLES", () => {
 
 
 
 
-
   describe("/api/articles/:article_id", () => {
+
 
 
 
@@ -239,12 +236,9 @@ describe("ARTICLES", () => {
 
 describe("QUERY", () => {
 
+  
 
 
-
-
-
-  //This needs sorting.
   test("GET: Returns 200 status code and an array sorted by the created_at (date) by default. ", () => {
 
     return request(app)

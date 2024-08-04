@@ -1,8 +1,6 @@
-// const {articleData, commentData, topicData, userData} = require('../be-nc-news/db/data/test-data')
+const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('../controllers/controller.js');
 
-const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('./controllers/controller.js');
-
-const { getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers } = require('./controllers/getComments.controller.js')
+const { getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers } = require('../controllers/getComments.controller.js')
 
 const express = require("express")
 
@@ -11,14 +9,13 @@ const app = express();
 app.use(express.json());
 
 
+app.get('/api', getAllEndpoints)
 
 app.get('/api/topics', getTopics)
 
-app.get('/api', getAllEndpoints)
+app.get('/api/articles', getAllArticles)
 
 app.get('/api/articles/:article_id', getArticleById)
-
-app.get('/api/articles', getAllArticles)
 
 app.get('/api/articles/:article_id/comments', getCommentsById)
 
@@ -37,14 +34,6 @@ app.get('/api/article/?sort-by=title')
 app.all("*",(request, response, next) => {
     response.status(404).send({ msg: "404 - request not found" })
  });
-
-
-
-
-
-
-
-
 
 
 //ERROR HANDLERS
