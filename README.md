@@ -8,7 +8,7 @@ This repo uses PSQL and Express.js to run the database and server.
 
 VIEW THE PROJECT
 
-https://be-nc-news-lhaf.onrender.com/api/articles
+https://be-nc-news-lhaf.onrender.com
 
 INSTRUCTIONS ON LOCAL USE
 
@@ -19,7 +19,7 @@ Required versions of software on local machine:
 
 - To clone this repo on your local machine use the following link:
 
-https://github.com/LivEva/be-nc-news.git
+https://github.com/LivEva/be-nc-news
 
 - To download the depencies run the follwoing command in the terminal:
 

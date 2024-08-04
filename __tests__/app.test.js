@@ -3,7 +3,7 @@ const db = require('../db/connection');
 const app = require('../endpoints/app');
 const seed = require('../db/seeds/seed');
 const {articleData, commentData, topicData, userData} = require('../db/data/test-data/index');
-const endpoints = require('../endpoints/app');
+const endpoints = require('../endpoints.json');
 const sorted = require("jest-sorted")
 
 
