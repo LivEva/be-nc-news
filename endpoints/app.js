@@ -1,6 +1,5 @@
 const { getTopics, getAllEndpoints, getArticleById, getAllArticles, getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers } = require('../controllers/controller.js');
 
-
 const express = require("express")
 
 const app = express();
@@ -79,6 +78,6 @@ app.use((err, request, response, next) => {
 
 
 
-//app.use(err, request, response, next)
+
 
 module.exports = app
