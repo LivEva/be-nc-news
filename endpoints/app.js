@@ -1,6 +1,5 @@
-const { getTopics, getAllEndpoints, getArticleById, getAllArticles } = require('../controllers/controller.js');
+const { getTopics, getAllEndpoints, getArticleById, getAllArticles, getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers } = require('../controllers/controller.js');
 
-const { getCommentsById, addCommentOnArticle, updateArticle, deleteComment, getUsers } = require('../controllers/getComments.controller.js')
 
 const express = require("express")
 
@@ -27,7 +26,6 @@ app.delete('/api/comments/:comment_id', deleteComment)
 
 app.get('/api/users', getUsers)
 
-app.get('/api/article/?sort-by=title')
 
 
 
@@ -36,7 +34,12 @@ app.all("*",(request, response, next) => {
  });
 
 
+ 
+
 //ERROR HANDLERS
+
+
+
 
 app.use((err, request, response, next) => {
     if(err.code === '22P02' || err.code === '23502'){

@@ -4,9 +4,9 @@ const app = require('../endpoints/app');
 const seed = require('../db/seeds/seed');
 const {articleData, commentData, topicData, userData} = require('../db/data/test-data/index');
 const endpoints = require('../endpoints.json');
-const comments = require('../db/data/test-data/comments');
-const articles = require('../db/data/test-data/articles');
 const sorted = require("jest-sorted")
+
+
 
 
 beforeEach(() => {
@@ -18,12 +18,42 @@ afterAll(() => {
     }
 })
 
-//TOPICS///////////////////////
+
+
+describe("ENDPOINTS", () => {
+
+
+
+
+ describe("/api - All available endpoints", () => {
+
+
+
+    
+  test("Returns 200 status code and description of all available endpoints", () => {
+    return request(app)
+    .get('/api')
+    .expect(200)
+    .then(({body}) => {
+    expect(body.endpoints).toEqual(endpoints)
+    })
+  })
+});
+
+});
+
+
+
 
 describe("TOPICS", () => {
 
+
+
+
   describe('GET /api/topics', () => {
       
+
+
   
     test('responds with 200 status code and object containing expected keys with expected data type values', () => {
 
@@ -35,9 +65,9 @@ describe("TOPICS", () => {
         const topics = response.body.topics.rows;
 
         expect(topics.length).toBe(3)
-      topics.forEach((topic) => {
-          expect(typeof topic.slug).toBe('string')
-          expect(typeof topic.description).toBe('string')
+          topics.forEach((topic) => {
+        expect(typeof topic.slug).toBe('string')
+        expect(typeof topic.description).toBe('string')
         })
       })
     });
@@ -52,19 +82,6 @@ describe("TOPICS", () => {
       })
     })
   });
-
-  describe("/api - All available endpoints", () => {
-
-    test("Returns 200 status code and description of all available endpoints", () => {
-      return request(app)
-      .get('/api')
-      .expect(200)
-      .then(({body}) => {
-      expect(body.endpoints).toEqual(endpoints)
-      })
-    })
-  });
-
 
 });
 
@@ -81,7 +98,7 @@ describe("ARTICLES", () => {
 
 
 
-    test("Returns 200 status code and the correct article when given valid article ID", () => {
+    test("GET: Returns 200 status code and the correct article when given valid article ID", () => {
       return request(app)
       .get('/api/articles/1')
       .expect(200)
@@ -105,7 +122,8 @@ describe("ARTICLES", () => {
 
 
 
-    test("Returns 200 status code, correct article matching article_id given and a comment_count category with correct value and datatype.", () => {
+
+    test("GET: Returns 200 status code, correct article matching article_id given and a comment_count category with correct value and datatype.", () => {
       return request(app)
       .get('/api/articles/1')
       .expect(200)
@@ -122,7 +140,7 @@ describe("ARTICLES", () => {
 
 
 
-    test("Returns 200 status code, correct article matching the article_id provided and a comment_count category with the value of how many comments that article has.", () => {
+    test("GET: Returns 200 status code, correct article matching the article_id provided and a comment_count category with the value of how many comments that article has.", () => {
       return request(app)
       .get('/api/articles/5')
       .expect(200)
@@ -138,7 +156,7 @@ describe("ARTICLES", () => {
 
 
 
-  test('Returns articles object with expected properties with correct datatypes', () => {
+  test('GET: Returns articles object with expected properties with correct datatypes', () => {
     return request(app)
     .get('/api/articles')
     .expect(200)
@@ -161,7 +179,9 @@ describe("ARTICLES", () => {
   });
 
 
-  test("Returns the list of articles in descending order, showing the most recent date at the top of the list.", () => {
+
+
+  test("GET: Returns the list of articles in descending order, showing the most recent date at the top of the list.", () => {
     return request(app)
     .get('/api/articles')
     .expect(200)
@@ -177,12 +197,31 @@ describe("ARTICLES", () => {
         created_at: '2020-11-03T09:12:00.000Z',
         votes: 0,
         article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+       
       })
     })
   });
 
 
-  test("Returns 200 status code and object with added property of comment_count.", () => {
+
+
+  test("GET: Returns the list of articles in descending order, sorted by default 'created_at'.", () => {
+    return request(app)
+    .get('/api/articles')
+    .expect(200)
+    .then((response) => {
+
+      const articles = response.body.articles;
+
+      expect(articles).toBeSortedBy("created_at", { descending: true });
+
+    })
+  });
+
+
+
+
+  test("GET: Returns 200 status code and object with added property of comment_count.", () => {
     return request(app)
     .get('/api/articles')
     .expect(200)
@@ -199,7 +238,7 @@ describe("ARTICLES", () => {
 
 
 
-  test("Returns a 404 status code when given an valid article ID but does not exist ", () => {
+  test("GET: Returns a 404 status code when given an valid article ID but does not exist ", () => {
     return request(app)
     .get('/api/articles/20')
     .expect(404)
@@ -209,7 +248,9 @@ describe("ARTICLES", () => {
   });
 
 
-  test("Returns 404 status message when passed a valid but non existent request name", () => {
+
+
+  test("GET: Returns 404 status message when passed a valid but non existent request name", () => {
      
     return request(app)
     .get('/api/not-an-endpoint')
@@ -219,7 +260,10 @@ describe("ARTICLES", () => {
     })
   });
 
-     test("Returns the 400 status code when given an invalid article ID", () => {
+
+
+
+     test("GET: Returns the 400 status code when given an invalid article ID", () => {
       return request(app)
       .get('/api/articles/number-one')
       .expect(400)
@@ -229,14 +273,7 @@ describe("ARTICLES", () => {
     })
   });
 
-})
 
-
-
-
-describe("QUERY", () => {
-
-  
 
 
   test("GET: Returns 200 status code and an array sorted by the created_at (date) by default. ", () => {
@@ -252,6 +289,16 @@ describe("QUERY", () => {
 
     })
   });
+
+});
+
+
+
+describe("QUERY SORT-BY ARTICLES", () => {
+
+
+
+describe("/api/articles/sort_by=", () => {
 
 
 
@@ -367,8 +414,6 @@ describe("QUERY", () => {
     })
   });
 
-  });
-
 
 
 
@@ -415,6 +460,8 @@ describe("QUERY", () => {
   });
 
 
+
+
   test("GET: Returns a 400 status code when the query is an invalid column name.", () => {
 
     return request(app)
@@ -427,13 +474,19 @@ describe("QUERY", () => {
     })
   });
 
+});
+
+});
 
 
 
-//TOPICS BY QUERY
+describe("TOPICS", () => {
 
 
-describe("GET TOPICS BY QUERY", () => {
+
+  describe("/api/articles?topic=", () => {
+
+
 
 
   test("GET: Returns 200 status code and the article that belongs to topic query request", () => {
@@ -463,7 +516,6 @@ describe("GET TOPICS BY QUERY", () => {
 
 
 
-
   test("GET: Returns 200 status code and the article that belongs to topic query request", () => {
 
     return request(app)
@@ -485,7 +537,6 @@ describe("GET TOPICS BY QUERY", () => {
 
 
 
-
   test("GET: Returns 404 status code when given a topic name that does not exist.", () => {
 
     return request(app)
@@ -496,7 +547,6 @@ describe("GET TOPICS BY QUERY", () => {
       expect(body.msg).toBe('Not Found')
     })
   });
-
 
 
 
@@ -512,21 +562,21 @@ describe("GET TOPICS BY QUERY", () => {
     })
   });
 
+});
 
-
-})
-  
-
-
-
-//COMMENTS ///////////////////
+});
 
 
 
 
+describe("COMMENTS", () => {
 
 
-describe("/api/articles/:article_id/comments'", () => {
+
+
+ describe("/api/articles/:article_id/comments'", () => {
+
+
 
 
   test("GET: Returns 200 status code and all the comments with the expected keys and value data types belonging to the article_id that is given.", () => {
@@ -588,6 +638,18 @@ describe("/api/articles/:article_id/comments'", () => {
 
 
 
+  test('GET: Returns a 200 status code with an empty array if the valid article_id requested has no comments', () => {
+    return request(app)
+    .get('/api/articles/7/comments')
+    .expect(200)
+    .then(({ body}) => {
+      expect(body).toEqual({ "comments": [] })
+    })
+});
+
+
+
+
   test("GET: Returns a 400 status code when given an invalid article_id request", () => {
 
     return request(app)
@@ -614,11 +676,6 @@ describe("/api/articles/:article_id/comments'", () => {
 
 
 
-describe("POST", () => {
-
-
-
-  
   test("POST: Returns 201 status code and sends back a new comment to the given article_id", () => {
 
     const newComment = { 
@@ -645,6 +702,11 @@ describe("POST", () => {
       })
     })
   });
+
+
+
+
+describe("POST COMMENTS", () => {
 
 
 
@@ -730,7 +792,9 @@ describe("POST", () => {
   });
 
 
-  test("Returns a 404 status message when passed a username that is not valid", () => {
+
+
+  test("POST: Returns a 404 status message when passed a username that is not valid", () => {
 
     return request(app)
     .post('/api/articles/4/comments')
@@ -745,13 +809,14 @@ describe("POST", () => {
     })
   });
 
+});
 
 });
 
 
 
 
-describe("PATCH", () => {
+describe("PATCH ARTICLE", () => {
 
 
 
@@ -867,16 +932,22 @@ describe("PATCH", () => {
       expect(body.msg).toBe("Article_id not found")
 
     })
-   
   });
 
-})
+});
 
 
 
-describe("DELETE", () => {
+
+describe("DELETE COMMENTS", () => {
+
+
+
 
   describe("/api/comments/:comment_id", () => {
+
+
+
 
     test("DELETE: Returns a 204 status code that deletes the comment belonging to the provided comment_id", () => {
 
@@ -919,7 +990,7 @@ describe("DELETE", () => {
 
 
 
-describe("GET", () => {
+describe("USERS", () => {
 
 
 
@@ -939,8 +1010,6 @@ describe("GET", () => {
 
         const users = response.body.users.rows;
 
-        console.log(users)
-
         expect(users.length).toBe(4)
 
         users.forEach((user) => {
@@ -950,12 +1019,12 @@ describe("GET", () => {
           expect(typeof user.avatar_url).toBe('string')
 
         })
-
       })
+    });
 
 
-    })
 
+    
     test("GET: Returns a 404 status code if the endpoint is valid but non-existent", () => {
 
       return request(app)
