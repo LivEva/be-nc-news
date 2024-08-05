@@ -62,7 +62,7 @@ describe("TOPICS", () => {
       .expect(200)
       .then((response) => {
 
-        const topics = response.body.topics.rows;
+        const topics = response.body.topics;
 
         expect(topics.length).toBe(3)
           topics.forEach((topic) => {
@@ -1008,7 +1008,7 @@ describe("USERS", () => {
       .expect(200)
       .then((response) => {
 
-        const users = response.body.users.rows;
+        const users = response.body.users;
 
         expect(users.length).toBe(4)
 

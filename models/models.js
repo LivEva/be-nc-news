@@ -4,7 +4,11 @@ const db = require('../db/connection');
 
 function fetchTopics() {
   
-    return db.query('SELECT * FROM topics;')
+    return db.query('SELECT * FROM topics;').then(({rows}) => {
+
+        return rows;
+
+    })
 
 };
 
@@ -191,7 +195,10 @@ function addCommentToArticle(article_id, username, body){
 
          function fetchUsers(){
 
-            return db.query(`SELECT * FROM users;`)
+            return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+
+                return rows;
+            })
 
 
          }
