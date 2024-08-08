@@ -615,14 +615,7 @@ describe("COMMENTS", () => {
       expect(comments.length).toBe(2)
 
       expect(comments).toMatchObject(   [
-        {
-          comment_id: 10,
-          body: 'git push origin master',
-          article_id: 3,
-          author: 'icellusedkars',
-          votes: 0,
-          created_at: '2020-06-20T07:24:00.000Z'
-        },
+
         {
           comment_id: 11,
           body: 'Ambidextrous marsupial',
@@ -630,7 +623,16 @@ describe("COMMENTS", () => {
           author: 'icellusedkars',
           votes: 0,
           created_at: '2020-09-19T23:10:00.000Z'
+        },
+        {
+          comment_id: 10,
+          body: 'git push origin master',
+          article_id: 3,
+          author: 'icellusedkars',
+          votes: 0,
+          created_at: '2020-06-20T07:24:00.000Z'
         }
+        
       ])
     })
   });

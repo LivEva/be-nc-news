@@ -107,7 +107,7 @@ return db.query(sqlString).then(({ rows }) => {
 
 function fetchCommentsById(article_id){
 
-    const commentsQuery = db.query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id])
+    const commentsQuery = db.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at desc;`, [article_id])
    
 
 const articleQuery = fetchArticleById(article_id)
